@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: zonagamer-backend
+
+  # Configuración de subida de archivos
+  servlet:
+    multipart:
+      max-file-size: 5MB # Tamaño máximo por archivo
+      max-request-size: 10MB # Tamaño máximo de la petición
+
+# Configuración de Firebase
+firebase:
+  credentials-path: classpath:fullstack-gamerzone-firebase.json
+  storage-bucket: zonagamer-fullstack.appspot.com
+  project-id: zonagamer-fullstack
+  database-url: https://zonagamer-fullstack-default-rtdb.firebaseio.com
+
+# Configuración de JWT
+jwt:
+  secret: ${JWT_SECRET:tu-secreto-super-seguro-cambialo-en-produccion}
+  expiration: 86400000 # 24 horas en milisegundos
+
+# Configuración de CORS
+cors:
+  allowed-origins: "*"
+
+# Puerto del servidor
+server:
+  port: 8080
+
+# Logging para debugging
+logging:
+  level:
+    com.zonagamer: DEBUG
+    org.springframework.security: DEBUG

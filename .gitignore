@@ -1,0 +1,46 @@
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Firebase Credentials ###
+**/fullstack-gamerzone-firebase.json
+src/main/resources/fullstack-gamerzone-firebase.json
+
+### Environment Variables ###
+.env
+.env.local
+.env.*.local
+
+### Node modules (si usaste Firebase CLI) ###
+node_modules/
+package-lock.json
