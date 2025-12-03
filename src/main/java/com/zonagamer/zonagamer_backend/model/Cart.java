@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.cloud.firestore.annotation.Exclude;
 import com.google.cloud.firestore.annotation.ServerTimestamp;
 
 import lombok.AllArgsConstructor;
@@ -30,12 +31,14 @@ public class Cart {
     @ServerTimestamp
     private Date fechaActualizacion;
 
+    @Exclude
     public Double getTotal(){
         return items.stream()
             .mapToDouble(CartItem::getSubtotal)
             .sum();
     }
 
+    @Exclude
     public int getTotalItems(){
         return items.stream()
             .mapToInt(CartItem::getQuantity)

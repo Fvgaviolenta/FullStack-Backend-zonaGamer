@@ -27,7 +27,7 @@ public class ProductRepository extends BaseRepository<Product>{
 
     public List<Product> findByCategory(String categoryId) throws ExecutionException, InterruptedException {
         return firestore.collection(getCollectionName())
-            .whereEqualTo("categiryId", categoryId)
+            .whereEqualTo("categoryId", categoryId)
             .whereEqualTo("active", true)
             .get()
             .get()

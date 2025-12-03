@@ -115,6 +115,66 @@ public class CategoryService {
     }
     
     /**
+     * Crea o verifica que exista una categoría (usado al crear productos)
+     * Si la categoría no existe, la crea automáticamente
+     */
+    public void ensureCategoryExists(String categoryId) 
+            throws ExecutionException, InterruptedException {
+        
+        // Verificar si la categoría ya existe
+        var existingCategory = categoryRepository.findById(categoryId);
+        
+        if (existingCategory.isEmpty()) {
+            log.info("Categoría '{}' no existe, creando automáticamente...", categoryId);
+            
+            // Crear la categoría con un nombre formateado
+            String formattedName = formatCategoryName(categoryId);
+            
+            Category category = Category.builder()
+                .id(categoryId)
+                .nombreCategoria(formattedName)
+                .parentId(null)  // Categoría raíz por defecto
+                .active(true)
+                .build();
+            
+            categoryRepository.save(category);
+            
+            log.info("✅ Categoría '{}' creada automáticamente", categoryId);
+        } else {
+            log.debug("Categoría '{}' ya existe", categoryId);
+        }
+    }
+    
+    /**
+     * Formatea el ID de categoría a un nombre legible
+     * Ejemplo: "componentes-pc" -> "Componentes Pc"
+     */
+    private String formatCategoryName(String categoryId) {
+        if (categoryId == null || categoryId.isEmpty()) {
+            return "Sin categoría";
+        }
+        
+        // Reemplazar guiones y guiones bajos por espacios
+        String formatted = categoryId.replace("-", " ").replace("_", " ");
+        
+        // Capitalizar primera letra de cada palabra
+        String[] words = formatted.split(" ");
+        StringBuilder result = new StringBuilder();
+        
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                result.append(Character.toUpperCase(word.charAt(0)));
+                if (word.length() > 1) {
+                    result.append(word.substring(1).toLowerCase());
+                }
+                result.append(" ");
+            }
+        }
+        
+        return result.toString().trim();
+    }
+    
+    /**
      * Actualiza una categoría
      */
     public CategoryResponseDTO updateCategory(String id, CategoryCreateDTO dto) 

@@ -69,7 +69,7 @@ public class CartService {
         log.info("Agregando producto al carrito: userId={}, productId={}, quantity={}", 
             userId, dto.getProductId(), dto.getQuantity());
         
-        // 1. Buscar producto
+        // 1. Buscar producto por document ID
         Product product = productRepository.findById(dto.getProductId())
             .orElseThrow(() -> new ResourceNotFoundException(
                 "Producto no encontrado: " + dto.getProductId()
@@ -131,7 +131,7 @@ public class CartService {
             log.debug("Item actualizado en carrito: nueva cantidad={}", newQuantity);
             
         } else {
-            // No existe: agregar nuevo item
+            // No existe: agregar nuevo item usando document ID
             CartItem newItem = CartItem.builder()
                 .productId(product.getId())
                 .productName(product.getNombreProducto())

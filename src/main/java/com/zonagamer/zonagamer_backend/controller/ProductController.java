@@ -8,12 +8,10 @@ import com.zonagamer.zonagamer_backend.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.Valid;
 import java.io.IOException;
@@ -86,33 +84,31 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ProductResponseDTO> crearProducto(
-        @Valid @RequestPart("productDTO") ProductCreateDTO productDTO,
-        @RequestPart(value = "image", required = false) MultipartFile image,
+        @Valid @RequestBody ProductCreateDTO productDTO,
         @AuthenticationPrincipal UserPrincipal currentUser
     ) throws ExecutionException, InterruptedException, IOException {
 
         log.info("Admin {} creando producto: {}", currentUser.getUsername(), productDTO.getNombreProducto());
 
-        ProductResponseDTO product = productService.createProduct(productDTO, image);
+        ProductResponseDTO product = productService.createProduct(productDTO, null);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(product);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ProductResponseDTO> updateProduct(
         @PathVariable String id,
-        @Valid @RequestPart("productDTO") ProductCreateDTO productDTO,
-        @RequestPart(value = "image", required = false) MultipartFile image,
+        @Valid @RequestBody ProductCreateDTO productDTO,
         @AuthenticationPrincipal UserPrincipal currentUser
     ) throws ExecutionException, InterruptedException, IOException {
 
         log.info("Admin {} actualizando producto: {}", currentUser.getUsername(), id);
 
-        ProductResponseDTO product = productService.updateProduct(id, productDTO, image);
+        ProductResponseDTO product = productService.updateProduct(id, productDTO, null);
 
         return ResponseEntity.ok(product);
     }

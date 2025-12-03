@@ -36,8 +36,15 @@ public class UserRepository extends BaseRepository<User>{
             return Optional.empty();
         }
 
-        User user = querySnapshot.toObjects(User.class).get(0);
-        return Optional.of(user);
+        var document = querySnapshot.getDocuments().get(0);
+        User user = document.toObject(User.class);
+        
+        // CRÍTICO: Asignar el document ID al campo id del objeto User
+        if (user != null) {
+            user.setId(document.getId());
+        }
+        
+        return Optional.ofNullable(user);
     }
 
     public boolean existsByEmail(String email) throws ExecutionException, InterruptedException {

@@ -17,8 +17,16 @@ public class OrderItem {
     private Integer quantity;
 
     private Double precioEnCompra;
+    
+    private Double subtotal;
 
+    // Método helper para calcular subtotal si no existe
     public Double getSubtotal(){
-        return precioEnCompra * quantity;
+        if (subtotal != null) {
+            return subtotal;
+        }
+        return precioEnCompra != null && quantity != null 
+            ? precioEnCompra * quantity 
+            : 0.0;
     }
 }

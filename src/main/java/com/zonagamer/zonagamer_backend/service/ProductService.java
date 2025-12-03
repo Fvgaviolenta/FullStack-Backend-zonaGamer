@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -20,9 +19,13 @@ public class ProductService {
     
     private final ProductRepository productRepository;
     private final StorageService storageService;
+    private final CategoryService categoryService;
     
     public ProductResponseDTO createProduct(ProductCreateDTO dto, MultipartFile image) 
             throws ExecutionException, InterruptedException, IOException {
+        
+        // Asegurar que la categoría exista (si no existe, se crea automáticamente)
+        categoryService.ensureCategoryExists(dto.getCategoryId());
         
         String imageUrl = image != null ? 
             storageService.uploadFile(image, "products") : 
@@ -35,8 +38,10 @@ public class ProductService {
             .categoryId(dto.getCategoryId())
             .stock(dto.getStock())
             .imageUrl(imageUrl)
-            .isFeatured(dto.isFeatured())
+            .featured(dto.getIsFeatured())
             .active(true)
+            .fechaCreacion(new java.util.Date())
+            .fechaActualizacion(new java.util.Date())
             .build();
             
         String id = productRepository.save(product);
@@ -105,7 +110,8 @@ public class ProductService {
         product.setDescripcionProducto(dto.getDescripcion());
         product.setCategoryId(dto.getCategoryId());
         product.setStock(dto.getStock());
-        product.setFeatured(dto.isFeatured());
+        product.setFeatured(dto.getIsFeatured());
+        product.setFechaActualizacion(new java.util.Date());
         
         productRepository.update(id, product);
         return mapToDTO(product);
@@ -127,7 +133,8 @@ public class ProductService {
         product.setDescripcionProducto(dto.getDescripcion());
         product.setCategoryId(dto.getCategoryId());
         product.setStock(dto.getStock());
-        product.setFeatured(dto.isFeatured());
+        product.setFeatured(dto.getIsFeatured());
+        product.setFechaActualizacion(new java.util.Date());
         
         productRepository.update(id, product);
         return mapToDTO(product);
@@ -173,7 +180,7 @@ public class ProductService {
             .imageUrl(product.getImageUrl())
             .categoryId(product.getCategoryId())
             .stock(product.getStock())
-            .isFeatured(product.isFeatured())
+            .featured(product.isFeatured())
             .disponibilidad(product.isActive())
             .fechaCreacion(product.getFechaCreacion() != null ? 
                 product.getFechaCreacion().toString() : null)

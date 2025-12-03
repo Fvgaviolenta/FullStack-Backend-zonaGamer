@@ -65,8 +65,14 @@ public abstract class BaseRepository<T> {
         }
 
         T entity = doc.toObject(getEntityClass());
+        
+        // CRÍTICO: Asignar el document ID al objeto
+        if (entity != null) {
+            setEntityId(entity, doc.getId());
+        }
+        
         log.debug("{} encontrado: {}", getEntityClass().getSimpleName());
-        return Optional.of(entity);
+        return Optional.ofNullable(entity);
     }
 
     public List<T> findAll() throws ExecutionException, InterruptedException {
@@ -77,7 +83,13 @@ public abstract class BaseRepository<T> {
             .get();
 
         List<T> entities = querySnapshot.getDocuments().stream()
-            .map(doc -> doc.toObject(getEntityClass()))
+            .map(doc -> {
+                T entity = doc.toObject(getEntityClass());
+                if (entity != null) {
+                    setEntityId(entity, doc.getId());
+                }
+                return entity;
+            })
             .collect(Collectors.toList());
 
         log.info("Obtenidos {} registros de {}", entities.size(), getEntityClass().getSimpleName());
@@ -112,5 +124,22 @@ public abstract class BaseRepository<T> {
             .get();
         
         return querySnapshot.size();
+    }
+    
+    /**
+     * Asigna el document ID de Firestore al campo 'id' de la entidad usando reflection.
+     * Este método es crítico porque Firestore no mapea automáticamente el document ID.
+     * 
+     * @param entity La entidad a la que se asignará el ID
+     * @param documentId El ID del documento de Firestore
+     */
+    private void setEntityId(T entity, String documentId) {
+        try {
+            var setIdMethod = getEntityClass().getMethod("setId", String.class);
+            setIdMethod.invoke(entity, documentId);
+        } catch (Exception e) {
+            log.warn("No se pudo asignar ID a la entidad {}: {}", 
+                getEntityClass().getSimpleName(), e.getMessage());
+        }
     }
 }

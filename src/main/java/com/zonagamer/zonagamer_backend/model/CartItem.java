@@ -1,5 +1,7 @@
 package com.zonagamer.zonagamer_backend.model;
 
+import com.google.cloud.firestore.annotation.Exclude;
+
 import lombok.Builder;
 
 import lombok.AllArgsConstructor;
@@ -21,6 +23,7 @@ public class CartItem {
 
     private Double precio;
 
+    @Exclude
     public Double getSubtotal(){
         return precio * quantity;
     }

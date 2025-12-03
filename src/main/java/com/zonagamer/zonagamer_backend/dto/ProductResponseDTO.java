@@ -1,6 +1,6 @@
 package com.zonagamer.zonagamer_backend.dto;
 
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,7 +26,8 @@ public class ProductResponseDTO {
 
     private String categoryId;
 
-    private boolean isFeatured;
+    @JsonProperty("isFeatured")
+    private boolean featured;
 
     private boolean disponibilidad;
 

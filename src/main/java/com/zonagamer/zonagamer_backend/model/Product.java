@@ -1,6 +1,8 @@
 package com.zonagamer.zonagamer_backend.model;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.cloud.firestore.annotation.PropertyName;
 import com.google.cloud.firestore.annotation.ServerTimestamp;
 
 import lombok.Builder;
@@ -29,7 +31,7 @@ public class Product {
 
     private String categoryId;
 
-    private boolean isFeatured;
+    private boolean featured;
 
     private boolean active;
 
@@ -38,6 +40,24 @@ public class Product {
 
     @ServerTimestamp
     private Date fechaActualizacion;
+
+    // Métodos explícitos para compatibilidad con Firestore
+    // Firestore almacena el campo como "isFeatured" en la base de datos
+    @PropertyName("isFeatured")
+    public boolean getIsFeatured() {
+        return featured;
+    }
+    
+    @PropertyName("isFeatured")
+    public void setIsFeatured(boolean isFeatured) {
+        this.featured = isFeatured;
+    }
+    
+    // Método estándar Java para código (Lombok lo generaría pero necesitamos ser explícitos)
+    @JsonProperty("featured")
+    public boolean isFeatured() {
+        return featured;
+    }
 
     public boolean hasStock(int quantity){
         return stock >= quantity && active;

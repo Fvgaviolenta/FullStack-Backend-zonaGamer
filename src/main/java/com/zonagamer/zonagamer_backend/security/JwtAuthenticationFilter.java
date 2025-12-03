@@ -45,6 +45,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             String userId = jwtService.getUserIdFromToken(token);
+            
+            if (userId == null || userId.trim().isEmpty()) {
+                log.warn("User ID extraído del token es nulo o vacío");
+                filterChain.doFilter(request, response);
+                return;
+            }
 
             User user = userRepository.findById(userId)
                 .orElse(null);

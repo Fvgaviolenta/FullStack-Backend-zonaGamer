@@ -37,7 +37,7 @@ public class CartController {
         return ResponseEntity.ok(cart);
     }
 
-    @PostMapping("/items")
+    @PostMapping({"/add"})
     public ResponseEntity<CartResponseDTO> agregarAlCarrito(
         @Valid @RequestBody AddToCartDTO dto,
         @AuthenticationPrincipal UserPrincipal currentUser

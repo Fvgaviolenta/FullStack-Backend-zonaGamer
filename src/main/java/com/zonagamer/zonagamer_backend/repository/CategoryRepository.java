@@ -28,6 +28,26 @@ public class CategoryRepository extends BaseRepository<Category>{
         return Category.class;
     }
 
+    /**
+     * Sobrescribir save para usar el ID de la categoría como document ID
+     * en lugar de generar un UUID
+     */
+    @Override
+    public String save(Category entity) throws ExecutionException, InterruptedException {
+        if (entity.getId() == null || entity.getId().isEmpty()) {
+            throw new IllegalArgumentException("Category ID no puede ser null o vacío");
+        }
+        
+        String categoryId = entity.getId();
+        
+        firestore.collection(getCollectionName())
+            .document(categoryId)  // Usar el ID de la categoría como document ID
+            .set(entity)
+            .get();
+        
+        return categoryId;
+    }
+
     public List<Category> findRootCategories() throws ExecutionException, InterruptedException {
         return findAll().stream()
             .filter(Category::isRoot)

@@ -31,4 +31,13 @@ public class ProductCreateDTO {
     private String imageUrl;
 
     private boolean isFeatured = false;
+
+    // Método getter explícito para que Jackson lo reconozca correctamente
+    public boolean getIsFeatured() {
+        return isFeatured;
+    }
+
+    public void setIsFeatured(boolean isFeatured) {
+        this.isFeatured = isFeatured;
+    }
 }
