@@ -122,17 +122,30 @@ public class OrderController {
         @AuthenticationPrincipal UserPrincipal currentUser
     ) throws ExecutionException, InterruptedException {
 
-        log.info("Usuario {} cancelando orden: {}", currentUser.getUsername(), id);
+        log.info("Usuario {} intentando cancelar orden: {}", currentUser.getUsername(), id);
 
         OrderResponseDTO order = orderService.getOrderById(id);
 
+        // Verificar propiedad de la orden
         if (!currentUser.isAdmin() && !order.getUserId().equals(currentUser.getId())) {
+            log.warn("Usuario {} intentó cancelar orden de otro usuario", currentUser.getUsername());
             throw new org.springframework.security.access.AccessDeniedException(
                 "No tienes permiso para cancelar esta orden"
             );
         }
 
-        orderService.cancelOrder(id);
+        // Usuario común solo puede cancelar si está PENDING
+        if (!currentUser.isAdmin() && order.getStatus() != Order.OrderStatus.PENDING) {
+            log.warn("Usuario {} intentó cancelar orden {} con estado: {}", 
+                currentUser.getUsername(), id, order.getStatus());
+            throw new IllegalStateException(
+                "Solo puedes cancelar órdenes en estado PENDING. Esta orden ya fue procesada."
+            );
+        }
+
+        orderService.cancelOrder(id, currentUser.isAdmin());
+
+        log.info("✅ Orden {} cancelada exitosamente por {}", id, currentUser.getUsername());
 
         return ResponseEntity.noContent().build();
     }

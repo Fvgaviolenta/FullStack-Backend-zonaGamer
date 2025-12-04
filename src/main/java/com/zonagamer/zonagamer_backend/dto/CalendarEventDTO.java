@@ -26,5 +26,7 @@ public class CalendarEventDTO {
     @NotNull(message = "El tipo de evento es obligatorio")
     private CalendarEvent.EventType type;
 
+    private boolean completed;
+
     private String creadoPor;
 }

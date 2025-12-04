@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -34,8 +33,6 @@ public class AuthService {
             .numeroDeTelefono(dto.getNumeroDeTelefono())
             .admin(false)
             .active(true)
-            .fechaCreacion(new Date())
-            .fechaActualizacion(new Date())
             .build();
             
         String userId = userRepository.save(user);

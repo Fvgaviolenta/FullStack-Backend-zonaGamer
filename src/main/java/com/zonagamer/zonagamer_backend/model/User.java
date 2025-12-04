@@ -1,8 +1,7 @@
 package com.zonagamer.zonagamer_backend.model;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.annotation.PropertyName;
 import com.google.cloud.firestore.annotation.ServerTimestamp;
 
@@ -37,10 +36,10 @@ public class User {
     private Integer puntajeCliente;
 
     @ServerTimestamp
-    private Date fechaCreacion;
+    private Timestamp fechaCreacion;
 
     @ServerTimestamp
-    private Date fechaActualizacion;
+    private Timestamp fechaActualizacion;
 
     public String obtenerNombreCompleto() {
         return nombre + " " + apellido;

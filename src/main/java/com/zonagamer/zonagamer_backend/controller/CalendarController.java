@@ -88,7 +88,7 @@ public class CalendarController {
         return ResponseEntity.ok(events);
     }
 
-    @GetMapping("/evento/{id}")
+    @GetMapping("/eventos/{id}")
     public ResponseEntity<CalendarEventResponseDTO> obtenerEventoPorId(@PathVariable String id) throws ExecutionException, InterruptedException {
 
         log.debug("Admin buscando evento: {}", id);
@@ -98,7 +98,7 @@ public class CalendarController {
         return ResponseEntity.ok(event);
     }
 
-    @PutMapping("/evento/{id}")
+    @PutMapping("/eventos/{id}")
     public ResponseEntity<CalendarEventResponseDTO> actualizarEvento(
         @PathVariable String id,
         @Valid @RequestBody CalendarEventDTO dto,
@@ -110,7 +110,7 @@ public class CalendarController {
         return ResponseEntity.ok(event);
     }
 
-    @PutMapping("/events/{id}/complete")
+    @PutMapping("/eventos/{id}/complete")
     public ResponseEntity<CalendarEventResponseDTO> marcarComoCompleto(
         @PathVariable String id,
         @AuthenticationPrincipal UserPrincipal currentUser
@@ -123,7 +123,7 @@ public class CalendarController {
         return ResponseEntity.ok(event);
     }
 
-    @PutMapping("/events/{id}/pending")
+    @PutMapping("/eventos/{id}/pending")
     public ResponseEntity<CalendarEventResponseDTO> marcarComoPendiente(
         @PathVariable String id,
         @AuthenticationPrincipal UserPrincipal currentUser
@@ -136,7 +136,7 @@ public class CalendarController {
         return ResponseEntity.ok(event);
     }
 
-    @DeleteMapping("events/{id}")
+    @DeleteMapping("/eventos/{id}")
     public ResponseEntity<Void> eliminarEvento(
         @PathVariable String id,
         @AuthenticationPrincipal UserPrincipal currentUser

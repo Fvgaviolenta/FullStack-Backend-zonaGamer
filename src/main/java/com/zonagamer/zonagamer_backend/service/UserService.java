@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -66,9 +65,8 @@ public class UserService {
         user.setNombre(nombre);
         user.setApellido(apellido);
         user.setNumeroDeTelefono(numeroDeTelefono);
-        user.setFechaActualizacion(new Date());
         
-        // Guardar cambios
+        // Guardar cambios (Firestore actualiza fechaActualizacion automáticamente)
         userRepository.update(userId, user);
         
         log.info("✅ Perfil actualizado para usuario: {}", userId);
@@ -102,7 +100,6 @@ public class UserService {
         
         // 3. Encriptar y guardar
         user.setPassword(passwordEncoder.encode(newPassword));
-        user.setFechaActualizacion(new Date());
         
         userRepository.update(userId, user);
         
@@ -124,7 +121,6 @@ public class UserService {
         }
         
         user.setAdmin(true);
-        user.setFechaActualizacion(new Date());
         
         userRepository.update(userId, user);
         
@@ -147,7 +143,6 @@ public class UserService {
         }
         
         user.setAdmin(false);
-        user.setFechaActualizacion(new Date());
         
         userRepository.update(userId, user);
         
@@ -166,7 +161,6 @@ public class UserService {
             ));
         
         user.setActive(false);
-        user.setFechaActualizacion(new Date());
         
         userRepository.update(userId, user);
         
@@ -184,7 +178,6 @@ public class UserService {
             ));
         
         user.setActive(true);
-        user.setFechaActualizacion(new Date());
         
         userRepository.update(userId, user);
         

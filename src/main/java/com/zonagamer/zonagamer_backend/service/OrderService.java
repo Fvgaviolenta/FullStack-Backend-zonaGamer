@@ -67,7 +67,7 @@ public class OrderService {
             .userId(userId)
             .items(orderItems)
             .total(cart.getTotal())
-            .status(Order.OrderStatus.PAID)  // Simulamos que ya está pagada
+            .status(Order.OrderStatus.PENDING)  // Orden pendiente de aprobación
             .deliveryAddress(checkoutDTO.getDeliveryAddress())
             .notes(checkoutDTO.getNotes())
             .build();
@@ -75,21 +75,10 @@ public class OrderService {
         String orderId = orderRepository.save(order);
         order.setId(orderId);
         
-        log.info("✅ Orden creada: {}", orderId);
+        log.info("✅ Orden creada con estado PENDING: {}", orderId);
         
-        // 7. Reducir stock de cada producto
-        try {
-            for (CartItem item : cart.getItems()) {
-                productService.reduceStock(item.getProductId(), item.getQuantity());
-                log.debug("Stock reducido para: {} (-{})", 
-                    item.getProductName(), item.getQuantity());
-            }
-        } catch (Exception e) {
-            // Si falla la reducción de stock, deberíamos revertir la orden
-            // Para simplicidad, solo logueamos el error
-            log.error("❌ Error al reducir stock: {}", e.getMessage());
-            throw new RuntimeException("Error al procesar la orden", e);
-        }
+        // NO reducimos stock hasta que la orden sea aprobada por un administrador
+        // El stock se reducirá cuando el admin cambie el estado a PAID o PROCESSING
         
         // 8. Vaciar el carrito
         cartService.clearCart(userId);
@@ -160,46 +149,89 @@ public class OrderService {
                 "Orden no encontrada: " + orderId
             ));
         
+        Order.OrderStatus oldStatus = order.getStatus();
         order.setStatus(newStatus);
+        
+        // Si la orden pasa de PENDING a PAID o PROCESSING, reducir stock
+        if (oldStatus == Order.OrderStatus.PENDING && 
+            (newStatus == Order.OrderStatus.PAID || newStatus == Order.OrderStatus.PROCESSING)) {
+            
+            log.info("Orden aprobada. Reduciendo stock...");
+            
+            try {
+                for (OrderItem item : order.getItems()) {
+                    productService.reduceStock(item.getProductId(), item.getQuantity());
+                    log.debug("Stock reducido para: {} (-{})", 
+                        item.getProductName(), item.getQuantity());
+                }
+            } catch (InsufficientStockException e) {
+                log.error("❌ Stock insuficiente al aprobar orden: {}", e.getMessage());
+                throw new IllegalStateException(
+                    "No hay suficiente stock disponible para aprobar esta orden: " + e.getMessage()
+                );
+            } catch (Exception e) {
+                log.error("❌ Error al reducir stock: {}", e.getMessage());
+                throw new RuntimeException("Error al procesar la aprobación de la orden", e);
+            }
+            
+            log.info("✅ Stock reducido exitosamente");
+        }
         
         orderRepository.update(orderId, order);
         
-        log.info("✅ Estado de orden actualizado");
+        log.info("✅ Estado de orden actualizado: {} -> {}", oldStatus, newStatus);
         
         return mapToResponseDTO(order);
     }
     
 
-    public void cancelOrder(String orderId) 
+    public void cancelOrder(String orderId, boolean isAdmin) 
             throws ExecutionException, InterruptedException {
         
-        log.info("Cancelando orden: {}", orderId);
+        log.info("Cancelando orden: {} (Admin: {})", orderId, isAdmin);
         
         Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new ResourceNotFoundException(
                 "Orden no encontrada: " + orderId
             ));
         
-        // Verificar que se pueda cancelar
-        if (order.getStatus() == Order.OrderStatus.SHIPPED || 
-            order.getStatus() == Order.OrderStatus.DELIVERED) {
+        Order.OrderStatus currentStatus = order.getStatus();
+        
+        // Validar que se pueda cancelar según el estado actual
+        if (currentStatus == Order.OrderStatus.SHIPPED || 
+            currentStatus == Order.OrderStatus.DELIVERED) {
             throw new IllegalStateException(
                 "No se puede cancelar una orden ya enviada o entregada"
             );
         }
         
-        // Restaurar stock de cada producto
-        for (OrderItem item : order.getItems()) {
-            productService.increaseStock(item.getProductId(), item.getQuantity());
-            log.debug("Stock restaurado para: {} (+{})", 
-                item.getProductName(), item.getQuantity());
+        // Si no es admin, solo puede cancelar órdenes PENDING
+        if (!isAdmin && currentStatus != Order.OrderStatus.PENDING) {
+            throw new IllegalStateException(
+                "Solo puedes cancelar órdenes en estado PENDING. Esta orden ya fue procesada."
+            );
+        }
+        
+        // Restaurar stock SOLO si la orden ya tenía stock reducido (PAID o PROCESSING)
+        if (currentStatus == Order.OrderStatus.PAID || 
+            currentStatus == Order.OrderStatus.PROCESSING) {
+            
+            log.info("Restaurando stock de orden procesada...");
+            
+            for (OrderItem item : order.getItems()) {
+                productService.increaseStock(item.getProductId(), item.getQuantity());
+                log.debug("Stock restaurado para: {} (+{})", 
+                    item.getProductName(), item.getQuantity());
+            }
+        } else {
+            log.info("Orden en estado {} - No se restaura stock (nunca fue reducido)", currentStatus);
         }
         
         // Marcar orden como cancelada
         order.setStatus(Order.OrderStatus.CANCELLED);
         orderRepository.update(orderId, order);
         
-        log.info("✅ Orden cancelada: {}", orderId);
+        log.info("✅ Orden cancelada: {} (Estado anterior: {})", orderId, currentStatus);
     }
     
 

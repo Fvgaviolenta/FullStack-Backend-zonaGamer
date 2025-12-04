@@ -26,20 +26,38 @@ public class OrderRepository extends BaseRepository<Order>{
     }
 
     public List<Order> findByUserId(String userId) throws ExecutionException, InterruptedException{
-        return firestore.collection(getCollectionName())
+        var querySnapshot = firestore.collection(getCollectionName())
             .whereEqualTo("userId", userId)
             .orderBy("fechaDeCreacion", Query.Direction.DESCENDING)
             .get()
-            .get()
-            .toObjects(Order.class);
+            .get();
+        
+        return querySnapshot.getDocuments().stream()
+            .map(doc -> {
+                Order order = doc.toObject(Order.class);
+                if (order != null) {
+                    order.setId(doc.getId());  // CRÍTICO: Asignar document ID
+                }
+                return order;
+            })
+            .collect(java.util.stream.Collectors.toList());
     }
 
     public List<Order> findByStatus(Order.OrderStatus status) throws ExecutionException, InterruptedException{
-        return firestore.collection(getCollectionName())
+        var querySnapshot = firestore.collection(getCollectionName())
             .whereEqualTo("status", status.name())
             .get()
-            .get()
-            .toObjects(Order.class);
+            .get();
+        
+        return querySnapshot.getDocuments().stream()
+            .map(doc -> {
+                Order order = doc.toObject(Order.class);
+                if (order != null) {
+                    order.setId(doc.getId());  // CRÍTICO: Asignar document ID
+                }
+                return order;
+            })
+            .collect(java.util.stream.Collectors.toList());
     }
     
 }

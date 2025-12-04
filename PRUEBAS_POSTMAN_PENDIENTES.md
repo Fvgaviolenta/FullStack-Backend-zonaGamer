@@ -320,8 +320,8 @@ Content-Type: application/json
 
 ---
 
-### 3.2 Obtener Mis Órdenes
-**Endpoint:** `GET /api/orders/my-orders`  
+### 3.2 Obtener Mis Órdenes (FUNCIONA)
+**Endpoint:** `GET /api/orders/my-orders` 
 **Autenticación:** Bearer Token  
 **Descripción:** Ver historial de órdenes del usuario autenticado
 
@@ -345,7 +345,7 @@ Authorization: Bearer {tu_token}
 
 ---
 
-### 3.3 Obtener Orden por ID
+### 3.3 Obtener Orden por ID (FUNCIONA)
 **Endpoint:** `GET /api/orders/{id}`  
 **Autenticación:** Bearer Token  
 **Descripción:** Ver detalles de una orden específica (solo propia o admin)
@@ -364,7 +364,7 @@ GET http://localhost:8080/api/orders/order-abc123
 
 ---
 
-### 3.4 🔒 Obtener Todas las Órdenes (ADMIN)
+### 3.4 🔒 Obtener Todas las Órdenes (ADMIN) (FUNCIONA)
 **Endpoint:** `GET /api/orders`  
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Listar todas las órdenes del sistema
@@ -378,7 +378,7 @@ Authorization: Bearer {tu_token_admin}
 
 ---
 
-### 3.5 🔒 Filtrar Órdenes por Estado (ADMIN)
+### 3.5 🔒 Filtrar Órdenes por Estado (ADMIN) (FUNCIONA)
 **Endpoint:** `GET /api/orders/status/{status}`  
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Filtrar órdenes por estado
@@ -399,7 +399,7 @@ GET http://localhost:8080/api/orders/status/PENDIENTE
 
 ---
 
-### 3.6 🔒 Actualizar Estado de Orden (ADMIN)
+### 3.6 🔒 Actualizar Estado de Orden (ADMIN) (FUNCIONA)
 **Endpoint:** `PUT /api/orders/{id}/status?newStatus={status}`  
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Cambiar el estado de una orden
@@ -439,7 +439,7 @@ DELETE http://localhost:8080/api/orders/order-abc123
 
 ## 4. Categorías
 
-### 4.1 Obtener Todas las Categorías
+### 4.1 Obtener Todas las Categorías (FUNCIONA)
 **Endpoint:** `GET /api/categorias`  
 **Autenticación:** No requerida  
 **Descripción:** Listar todas las categorías disponibles
@@ -477,7 +477,7 @@ GET http://localhost:8080/api/categorias/root
 
 ---
 
-### 4.3 Obtener Categoría por ID
+### 4.3 Obtener Categoría por ID (FUNCIONA)
 **Endpoint:** `GET /api/categorias/{id}`  
 **Autenticación:** No requerida  
 **Descripción:** Ver detalles de una categoría específica
@@ -519,9 +519,10 @@ Content-Type: application/json
 **Body:**
 ```json
 {
-    "nombreCategoria": "Accesorios",
-    "descripcion": "Accesorios para gaming",
-    "parentId": null
+    "id": "gabinetes",
+    "nombreCategoria": "gabinetes",
+    "parentID":"",
+    "active": true
 }
 ```
 
@@ -529,7 +530,7 @@ Content-Type: application/json
 
 ---
 
-### 4.6 🔒 Actualizar Categoría (ADMIN)
+### 4.6 🔒 Actualizar Categoría (ADMIN) (FUNCIONA)
 **Endpoint:** `PUT /api/categorias/{id}`  
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Modificar una categoría existente
@@ -552,7 +553,7 @@ Content-Type: application/json
 
 ---
 
-### 4.7 🔒 Eliminar Categoría (ADMIN)
+### 4.7 🔒 Eliminar Categoría (ADMIN) (FUNCIONA)
 **Endpoint:** `DELETE /api/categorias/{id}`  
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Eliminar una categoría
@@ -573,7 +574,7 @@ DELETE http://localhost:8080/api/categorias/cat-999
 
 ## 5. Usuarios - Perfil y Administración
 
-### 5.1 Obtener Mi Perfil
+### 5.1 Obtener Mi Perfil (FUNCIONA)
 **Endpoint:** `GET /api/users/me`  
 **Autenticación:** Bearer Token  
 **Descripción:** Ver información del usuario autenticado
@@ -599,7 +600,7 @@ Authorization: Bearer {tu_token}
 
 ---
 
-### 5.2 Actualizar Mi Perfil
+### 5.2 Actualizar Mi Perfil (FUNCIONA)
 **Endpoint:** `PUT /api/users/me`  
 **Autenticación:** Bearer Token  
 **Descripción:** Actualizar datos del perfil (nombre, apellido, teléfono)
@@ -623,7 +624,7 @@ Content-Type: application/json
 
 ---
 
-### 5.3 Cambiar Mi Contraseña
+### 5.3 Cambiar Mi Contraseña (funciona)
 **Endpoint:** `PUT /api/users/me/password`  
 **Autenticación:** Bearer Token  
 **Descripción:** Cambiar la contraseña del usuario autenticado
@@ -646,7 +647,7 @@ Content-Type: application/json
 
 ---
 
-### 5.4 🔒 Obtener Todos los Usuarios (ADMIN)
+### 5.4 🔒 Obtener Todos los Usuarios (ADMIN) (FUNCIONA)
 **Endpoint:** `GET /api/users`  
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Listar todos los usuarios del sistema
@@ -660,7 +661,7 @@ Authorization: Bearer {tu_token_admin}
 
 ---
 
-### 5.5 🔒 Obtener Usuario por ID (ADMIN)
+### 5.5 🔒 Obtener Usuario por ID (ADMIN) (FUNCIONA)
 **Endpoint:** `GET /api/users/{id}`  
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Ver detalles de un usuario específico
@@ -679,7 +680,7 @@ GET http://localhost:8080/api/users/user-456
 
 ---
 
-### 5.6 🔒 Promover Usuario a Admin (ADMIN)
+### 5.6 🔒 Promover Usuario a Admin (ADMIN) (FUNCIONA)
 **Endpoint:** `PUT /api/users/{id}/promote`  
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Dar privilegios de administrador a un usuario
@@ -698,7 +699,7 @@ PUT http://localhost:8080/api/users/user-456/promote
 
 ---
 
-### 5.7 🔒 Revocar Admin (ADMIN)
+### 5.7 🔒 Revocar Admin (ADMIN) (FUNCIONA)
 **Endpoint:** `PUT /api/users/{id}/revoke`  
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Quitar privilegios de administrador
@@ -717,7 +718,7 @@ PUT http://localhost:8080/api/users/user-456/revoke
 
 ---
 
-### 5.8 🔒 Desactivar Usuario (ADMIN)
+### 5.8 🔒 Desactivar Usuario (ADMIN) (FUNCIONA)
 **Endpoint:** `PUT /api/users/{id}/desactivarUser`  
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Desactivar cuenta de usuario
@@ -736,7 +737,7 @@ PUT http://localhost:8080/api/users/user-456/desactivarUser
 
 ---
 
-### 5.9 🔒 Activar Usuario (ADMIN)
+### 5.9 🔒 Activar Usuario (ADMIN) (FUNCIONA)
 **Endpoint:** `PUT /api/users/{id}/activarUser`  
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Reactivar cuenta de usuario
@@ -755,7 +756,7 @@ PUT http://localhost:8080/api/users/user-456/activarUser
 
 ---
 
-### 5.10 🔒 Estadísticas de Usuarios (ADMIN)
+### 5.10 🔒 Estadísticas de Usuarios (ADMIN) (FUNCIONA)
 **Endpoint:** `GET /api/users/stats`  
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Obtener estadísticas generales de usuarios
@@ -780,8 +781,8 @@ Authorization: Bearer {tu_token_admin}
 
 > ⚠️ **IMPORTANTE:** Todos los endpoints de calendario requieren privilegios de administrador
 
-### 6.1 🔒 Crear Evento
-**Endpoint:** `POST /api/calendar/eventos`  
+### 6.1 🔒 Crear Evento (FUNCIONA)
+**Endpoint:** `POST /api/calendar/eventos` 
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Crear un nuevo evento en el calendario
 
@@ -796,18 +797,39 @@ Content-Type: application/json
 {
     "titulo": "Lanzamiento PlayStation 6",
     "descripcion": "Evento de lanzamiento oficial",
-    "fechaInicio": "2025-12-15T10:00:00",
-    "fechaFin": "2025-12-15T18:00:00",
-    "ubicacion": "Centro de Eventos",
-    "tipo": "LANZAMIENTO"
+    "fechaDeInicio": "2025-12-24T10:00:00",
+    "fechaDeTermino": "2025-12-24T18:00:00",
+    "type": "REUNION"
 }
 ```
 
+> 📝 **Notas sobre fechas:**
+> - **Formato requerido:** `YYYY-MM-DDTHH:mm:ss` (ISO 8601)
+> - **Ejemplo:** `"2025-12-24T10:00:00"` = 24 de diciembre de 2025 a las 10:00 AM
+> - **Si solo envías fecha sin hora** (ej: `"2025-12-24T00:00:00"`):
+>   - `fechaDeInicio` tomará por defecto las **9:00 AM**
+>   - `fechaDeTermino` tomará por defecto las **6:00 PM**
+> - **Tipos de evento disponibles:** `REUNION`, `TAREA`, `MANTENIMIENTO`, `FECHA_LIMITE`, `OTROS`
+> - `fechaDeCreacion` se genera automáticamente (no incluir en el body)
+
 **Expected Response:** `201 CREATED`
+```json
+{
+    "id": "abc123",
+    "titulo": "Lanzamiento PlayStation 6",
+    "descripcion": "Evento de lanzamiento oficial",
+    "fechaDeInicio": "2025-12-24T10:00:00",
+    "fechaDeTermino": "2025-12-24T18:00:00",
+    "type": "REUNION",
+    "completed": false,
+    "creadoPor": "admin-user-id",
+    "fechaCreacion": "2025-12-03T19:30:00"
+}
+```
 
 ---
 
-### 6.2 🔒 Obtener Todos los Eventos
+### 6.2 🔒 Obtener Todos los Eventos (FUNCIONA)
 **Endpoint:** `GET /api/calendar/eventos`  
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Listar todos los eventos del calendario
@@ -821,7 +843,7 @@ Authorization: Bearer {tu_token_admin}
 
 ---
 
-### 6.3 🔒 Obtener Eventos Pendientes
+### 6.3 🔒 Obtener Eventos Pendientes (FUNCIONA)
 **Endpoint:** `GET /api/calendar/eventos/pendientes`  
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Listar eventos que aún no se han completado
@@ -835,7 +857,7 @@ Authorization: Bearer {tu_token_admin}
 
 ---
 
-### 6.4 🔒 Obtener Eventos por Rango de Fechas
+### 6.4 🔒 Obtener Eventos por Rango de Fechas (ELIMINARLO)
 **Endpoint:** `GET /api/calendar/eventos/rango?inicio={datetime}&fin={datetime}`  
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Filtrar eventos por rango de fechas
@@ -850,11 +872,30 @@ Authorization: Bearer {tu_token_admin}
 GET http://localhost:8080/api/calendar/eventos/rango?inicio=2025-12-01T00:00:00&fin=2025-12-31T23:59:59
 ```
 
+> 📝 **Formato de fechas en parámetros de URL:**
+> - Formato: `YYYY-MM-DDTHH:mm:ss`
+> - Ejemplo: `?inicio=2025-12-24T00:00:00&fin=2025-12-25T23:59:59`
+> - Para buscar eventos del 24 de diciembre: `inicio=2025-12-24T00:00:00&fin=2025-12-24T23:59:59`
+
 **Expected Response:** `200 OK`
+```json
+[
+    {
+        "id": "event-001",
+        "titulo": "Evento de Navidad",
+        "fechaDeInicio": "2025-12-24T10:00:00",
+        "fechaDeTermino": "2025-12-24T18:00:00",
+        "type": "REUNION",
+        "completed": false,
+        "creadoPor": "admin-id",
+        "fechaCreacion": "2025-12-01T10:30:00"
+    }
+]
+```
 
 ---
 
-### 6.5 🔒 Obtener Próximos Eventos
+### 6.5 🔒 Obtener Próximos Eventos (FUNCIONA)
 **Endpoint:** `GET /api/calendar/eventos/proximos?days={number}`  
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Obtener eventos de los próximos N días (default: 7)
@@ -873,8 +914,8 @@ GET http://localhost:8080/api/calendar/eventos/proximos?days=14
 
 ---
 
-### 6.6 🔒 Obtener Evento por ID
-**Endpoint:** `GET /api/calendar/evento/{id}`  
+### 6.6 🔒 Obtener Evento por ID (FUNCIONA)
+**Endpoint:** `GET /api/calendar/eventos/{id}`  
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Ver detalles de un evento específico
 
@@ -885,17 +926,30 @@ Authorization: Bearer {tu_token_admin}
 
 **Ejemplo Request:**
 ```
-GET http://localhost:8080/api/calendar/evento/event-123
+GET http://localhost:8080/api/calendar/eventos/c4b8d8f0-abfe-43f6-9b35-c215a29ae437
 ```
 
 **Expected Response:** `200 OK`
+```json
+{
+    "id": "c4b8d8f0-abfe-43f6-9b35-c215a29ae437",
+    "titulo": "Lanzamiento PlayStation 6",
+    "descripcion": "Evento de lanzamiento oficial",
+    "fechaDeInicio": "2025-12-24T10:00:00",
+    "fechaDeTermino": "2025-12-24T18:00:00",
+    "type": "REUNION",
+    "completed": false,
+    "creadoPor": "admin-001",
+    "fechaCreacion": "2025-12-03T19:49:49"
+}
+```
 
 ---
 
-### 6.7 🔒 Actualizar Evento
-**Endpoint:** `PUT /api/calendar/evento/{id}`  
+### 6.7 🔒 Actualizar Evento (FUNCIONA)
+**Endpoint:** `PUT /api/calendar/eventos/{id}`  
 **Autenticación:** Bearer Token (Admin)  
-**Descripción:** Modificar un evento existente
+**Descripción:** Modific'0kun evento existente
 
 **Headers:**
 ```
@@ -908,16 +962,48 @@ Content-Type: application/json
 {
     "titulo": "Lanzamiento PlayStation 6 - ACTUALIZADO",
     "descripcion": "Evento pospuesto",
-    "fechaInicio": "2025-12-20T10:00:00"
+    "fechaDeInicio": "2025-12-25T10:00:00",
+    "fechaDeTermino": "2025-12-25T20:00:00",
+    "type": "REUNION",
+    "completed": true
 }
 ```
 
+> 📝 **Notas:**
+> - Campos requeridos: `titulo`, `fechaDeInicio`, `type`
+> - Campos opcionales: `descripcion`, `fechaDeTermino`, `completed`
+> - `completed` default: `false`. Puedes actualizarlo aquí o usar los endpoints dedicados (/complete, /pending)
+> - Si envías fecha sin hora (00:00:00), se aplicarán las horas por defecto (9 AM / 6 PM)
+> - `fechaDeCreacion` NO se modifica (se preserva la fecha original)
+
 **Expected Response:** `200 OK`
+```json
+{
+    "id": "event-123",
+    "titulo": "Lanzamiento PlayStation 6 - ACTUALIZADO",
+    "descripcion": "Evento pospuesto",
+    "fechaDeInicio": "2025-12-25T10:00:00",
+    "fechaDeTermino": "2025-12-25T20:00:00",
+    "type": "REUNION",
+    "completed": true,
+    "creadoPor": "admin-id",
+    "fechaCreacion": "2025-12-01T15:30:00"
+}
+```
+
+> 💡 **Flexibilidad en Actualización de Estado:**
+> El campo `completed` puede modificarse de dos formas:
+> 1. **Endpoint General**: `PUT /api/calendar/eventos/{id}` con `"completed": true/false` en el body
+> 2. **Endpoints Dedicados**: 
+>    - `PUT /api/calendar/eventos/{id}/complete` (marca como completado)
+>    - `PUT /api/calendar/eventos/{id}/pending` (marca como pendiente)
+> 
+> Ambos enfoques son válidos y producen el mismo resultado.
 
 ---
 
-### 6.8 🔒 Marcar Evento como Completado
-**Endpoint:** `PUT /api/calendar/events/{id}/complete`  
+### 6.8 🔒 Marcar Evento como Completado (FUNCIONA)
+**Endpoint:** `PUT /api/calendar/eventos/{id}/complete`  
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Cambiar estado del evento a completado
 
@@ -928,15 +1014,25 @@ Authorization: Bearer {tu_token_admin}
 
 **Ejemplo Request:**
 ```
-PUT http://localhost:8080/api/calendar/events/event-123/complete
+PUT http://localhost:8080/api/calendar/eventos/c4b8d8f0-abfe-43f6-9b35-c215a29ae437/complete
 ```
 
 **Expected Response:** `200 OK`
+```json
+{
+    "id": "c4b8d8f0-abfe-43f6-9b35-c215a29ae437",
+    "titulo": "Lanzamiento PlayStation 6",
+    "completed": true,
+    "type": "REUNION",
+    "fechaDeInicio": "2025-12-24T10:00:00",
+    "fechaDeTermino": "2025-12-24T18:00:00"
+}
+```
 
 ---
 
-### 6.9 🔒 Marcar Evento como Pendiente
-**Endpoint:** `PUT /api/calendar/events/{id}/pending`  
+### 6.9 🔒 Marcar Evento como Pendiente (FUNCIONA)
+**Endpoint:** `PUT /api/calendar/eventos/{id}/pending`  
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Cambiar estado del evento a pendiente
 
@@ -947,15 +1043,23 @@ Authorization: Bearer {tu_token_admin}
 
 **Ejemplo Request:**
 ```
-PUT http://localhost:8080/api/calendar/events/event-123/pending
+PUT http://localhost:8080/api/calendar/eventos/c4b8d8f0-abfe-43f6-9b35-c215a29ae437/pending
 ```
 
 **Expected Response:** `200 OK`
+```json
+{
+    "id": "c4b8d8f0-abfe-43f6-9b35-c215a29ae437",
+    "titulo": "Lanzamiento PlayStation 6",
+    "completed": false,
+    "type": "REUNION"
+}
+```
 
 ---
 
-### 6.10 🔒 Eliminar Evento
-**Endpoint:** `DELETE /api/calendar/events/{id}`  
+### 6.10 🔒 Eliminar Evento (FUNCIONA)
+**Endpoint:** `DELETE /api/calendar/eventos/{id}`  
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Eliminar un evento del calendario
 
@@ -966,14 +1070,14 @@ Authorization: Bearer {tu_token_admin}
 
 **Ejemplo Request:**
 ```
-DELETE http://localhost:8080/api/calendar/events/event-123
+DELETE http://localhost:8080/api/calendar/eventos/c4b8d8f0-abfe-43f6-9b35-c215a29ae437
 ```
 
 **Expected Response:** `204 NO CONTENT`
 
 ---
 
-### 6.11 🔒 Estadísticas del Calendario
+### 6.11 🔒 Estadísticas del Calendario /
 **Endpoint:** `GET /api/calendar/stats`  
 **Autenticación:** Bearer Token (Admin)  
 **Descripción:** Obtener estadísticas de eventos

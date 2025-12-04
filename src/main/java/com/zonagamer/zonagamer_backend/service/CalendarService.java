@@ -1,5 +1,6 @@
 package com.zonagamer.zonagamer_backend.service;
 
+import com.google.cloud.Timestamp;
 import com.zonagamer.zonagamer_backend.dto.CalendarEventDTO;
 import com.zonagamer.zonagamer_backend.dto.CalendarEventResponseDTO;
 import com.zonagamer.zonagamer_backend.exception.ResourceNotFoundException;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -35,12 +35,24 @@ public class CalendarService {
             );
         }
         
-        // Crear evento - convertir LocalDateTime a Date
+        // Convertir LocalDateTime a Timestamp
+        // Si el usuario solo proporciona fecha, agregar hora por defecto (9:00 AM)
+        LocalDateTime startDateTime = dto.getFechaDeInicio();
+        if (startDateTime.getHour() == 0 && startDateTime.getMinute() == 0) {
+            startDateTime = startDateTime.withHour(9).withMinute(0);
+        }
+        
+        LocalDateTime endDateTime = dto.getFechaDeTermino();
+        if (endDateTime != null && endDateTime.getHour() == 0 && endDateTime.getMinute() == 0) {
+            endDateTime = endDateTime.withHour(18).withMinute(0); // 6:00 PM por defecto
+        }
+        
+        // Crear evento
         CalendarEvent event = CalendarEvent.builder()
             .titulo(dto.getTitulo())
             .descripcion(dto.getDescripcion())
-            .fechaDeInicio(convertToDate(dto.getFechaDeInicio()))
-            .fechaDeTermino(dto.getFechaDeTermino() != null ? convertToDate(dto.getFechaDeTermino()) : null)
+            .fechaDeInicio(convertToTimestamp(startDateTime))
+            .fechaDeTermino(endDateTime != null ? convertToTimestamp(endDateTime) : null)
             .type(dto.getType())
             .completed(false)
             .creadoPor(createdBy)
@@ -93,13 +105,12 @@ public class CalendarService {
             );
         }
         
-        List<CalendarEvent> events = calendarEventRepository.findAll();
+        Timestamp start = convertToTimestamp(startDate);
+        Timestamp end = convertToTimestamp(endDate);
         
-        Date start = convertToDate(startDate);
-        Date end = convertToDate(endDate);
+        List<CalendarEvent> events = calendarEventRepository.findByDateRange(start, end);
         
         return events.stream()
-            .filter(event -> !event.getFechaDeInicio().before(start) && !event.getFechaDeInicio().after(end))
             .map(this::mapToResponseDTO)
             .collect(Collectors.toList());
     }
@@ -134,12 +145,24 @@ public class CalendarService {
             );
         }
         
+        // Convertir fechas con hora por defecto si es necesario
+        LocalDateTime startDateTime = dto.getFechaDeInicio();
+        if (startDateTime.getHour() == 0 && startDateTime.getMinute() == 0) {
+            startDateTime = startDateTime.withHour(9).withMinute(0);
+        }
+        
+        LocalDateTime endDateTime = dto.getFechaDeTermino();
+        if (endDateTime != null && endDateTime.getHour() == 0 && endDateTime.getMinute() == 0) {
+            endDateTime = endDateTime.withHour(18).withMinute(0);
+        }
+        
         // Actualizar campos
         event.setTitulo(dto.getTitulo());
         event.setDescripcion(dto.getDescripcion());
-        event.setFechaDeInicio(convertToDate(dto.getFechaDeInicio()));
-        event.setFechaDeTermino(dto.getFechaDeTermino() != null ? convertToDate(dto.getFechaDeTermino()) : null);
+        event.setFechaDeInicio(convertToTimestamp(startDateTime));
+        event.setFechaDeTermino(endDateTime != null ? convertToTimestamp(endDateTime) : null);
         event.setType(dto.getType());
+        event.setCompleted(dto.isCompleted());
         
         // Guardar cambios
         calendarEventRepository.update(eventId, event);
@@ -218,13 +241,21 @@ public class CalendarService {
         return getEventsByDateRange(now, future);
     }
     
-    // Métodos de conversión entre LocalDateTime y Date
-    private Date convertToDate(LocalDateTime localDateTime) {
-        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+    // Métodos de conversión entre LocalDateTime y Timestamp
+    private Timestamp convertToTimestamp(LocalDateTime localDateTime) {
+        if (localDateTime == null) return null;
+        java.util.Date date = java.util.Date.from(
+            localDateTime.atZone(ZoneId.systemDefault()).toInstant()
+        );
+        return Timestamp.of(date);
     }
     
-    private LocalDateTime convertToLocalDateTime(Date date) {
-        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    private LocalDateTime convertFromTimestamp(Timestamp timestamp) {
+        if (timestamp == null) return null;
+        return LocalDateTime.ofInstant(
+            timestamp.toDate().toInstant(),
+            ZoneId.systemDefault()
+        );
     }
     
     private CalendarEventResponseDTO mapToResponseDTO(CalendarEvent event) {
@@ -232,14 +263,14 @@ public class CalendarService {
             .id(event.getId())
             .titulo(event.getTitulo())
             .descripcion(event.getDescripcion())
-            .fechaDeInicio(convertToLocalDateTime(event.getFechaDeInicio()))
+            .fechaDeInicio(convertFromTimestamp(event.getFechaDeInicio()))
             .fechaDeTermino(event.getFechaDeTermino() != null ? 
-                convertToLocalDateTime(event.getFechaDeTermino()) : null)
+                convertFromTimestamp(event.getFechaDeTermino()) : null)
             .type(event.getType().name())
             .completed(event.isCompleted())
             .creadoPor(event.getCreadoPor())
             .fechaCreacion(event.getFechaDeCreacion() != null ? 
-                convertToLocalDateTime(event.getFechaDeCreacion()) : null)
+                convertFromTimestamp(event.getFechaDeCreacion()) : null)
             .build();
     }
 }

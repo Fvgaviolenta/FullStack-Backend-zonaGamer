@@ -1,7 +1,6 @@
 package com.zonagamer.zonagamer_backend.model;
 
-import java.util.Date;
-
+import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.annotation.ServerTimestamp;
 
 import lombok.AllArgsConstructor;
@@ -20,9 +19,9 @@ public class CalendarEvent {
 
     private String descripcion;
 
-    private Date fechaDeInicio;
+    private Timestamp fechaDeInicio;
 
-    private Date fechaDeTermino;
+    private Timestamp fechaDeTermino;
 
     private EventType type;
 
@@ -31,7 +30,7 @@ public class CalendarEvent {
     private String creadoPor;
 
     @ServerTimestamp
-    private Date FechaDeCreacion;
+    private Timestamp fechaDeCreacion;
 
     public enum EventType{
         REUNION,
