@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "zonagamer-fullstack",
+  "private_key_id": "dd571ccaf006780ff83b568a673cde4466cc7b9e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCzhRn1/5afWTrd\n2ttwGRsDkeGBr0Zs3Fazt5iKXKdkwQASgrHjC+CANwmuucotu+T7bsQ2P0Ir/pB6\nwR/lC6wnFwovKXDWddiDmVkCBMJ6h3TzWKGaSyMXs6G+8TWzlvf/IScis4rtG+Jg\n7GU15Y/8V0a/zwmwvZgadnwKGYuYoeFzSWTRgZLmNRs6Clxtbzj9MrqROzf/U06E\nsWGBHvVEhCTyKmd7hB0oie9wN23j++DUrrZ5aXdzw+u4BMEUY+aXamXgFQvx0BmY\ncWcTFaNoFHl4hPHTtVaKnQHySSfr6kJnKUD6r6cCvlZTUjm5t+YLKv5FFYvXeQjS\nE8xdeHZFAgMBAAECggEABvggmyJ+RjboWGMN+FLdL90KuGZl0UWXjxgOUbbJn9l3\nR4Cv57zXDRs14sTfMrnT6Kfy8ZkwmDUkhkN3mcSDfSwBjvWopgbCrk82e6PUKf4W\nvfi/o1YN6XZljdxe5ZczjwHKO2hleRGHTxR2VGqSVa1Mt5cRzPz7SfG2HI1D1FvJ\nwq4rzfp6jKTJmE5hVqg271PxzQW60FfjOfuzYckfpMhBY9o1qiWEkGxuhyr5FJUx\nzCgGnHDjWcTtFCItyrCCJOOhaclo38k5L/kZ+SCgxYOg7UYxC1i0RANncLHdFl9O\np6V6eDU23Np1pOFe4BpgpEPg/jpsL7OK27SDgSs7mQKBgQDs5KgOowc8jtP9njJc\ndkfad2oy5o6qzJfam/ariM+/vO4bCqlhm/qAS/ZH19ADwHyDjfBuZ19+LyrB7Gxh\nx1QBjzTtyI9DFP/9GyIqXMNqecTNfv75TOk01IM/e4OqSo2LVIqLoCmjY28zwFqW\nES2kvMob4MnZ35HEW3iUD9WDaQKBgQDB/87xmQe0SDPJtU2Ik8MRZNFLxstBwG8T\nba34jlTzlVSrVjM3sa/tab7mjDQsrhKVAlcR3YQSGuOWGw7vJjFkc4Q/oLWWbsa0\nwbOPTCH8WAv2CkO0zlzi0+RV6UU/oBCRpalJcjNmGKxvL7r3JlBGHxxPx3BnksIb\nnLqKqq9sfQKBgQCzwpNwf++m2W8uPhRTK4I82m7g7ymFnDkDL2SQKAIVqkU4ie+c\nXSNKpdneDHsRzcfugA/Zh2HkO+CDRWe9DufFQylT4uQrcE0MgMF9SeUT8BESKvNK\ntD0m1Lg/vPddirM77kwvxbqy/GpO6AEVbTWok4X+f6ZMSSWwzgSCvj00OQKBgEcc\nlOf8l1VfThR3L/eLamq60Pl84k600kKF5sqAqeUr7QBtNZMJwBo/s+lgpVNnb4pN\ndEspLttQHfKM8pl5H4vZyDVmnImLC62Af2hcmOyd/axvsMfbCTNgRoezXV3oN4qb\n9gTlJrAbBUIwddFYqv45MzCPQ8XDhwGGHt7rmCglAoGAGf/f1WnElW/SGWyJ6p5E\nei03FsQuRPCjZ4SBqPWLg2gwEIHR4smXTMT1HdCUQt3JUtTOzKQpTU8QaIIsuTFe\nyndVU/DeTt3wnR9FrnE55nDMY+EfbdNvTWhbiEcgkG0DkSQ1zP+JnNR0BeeTmEEq\nCDyixrpA7OdnYSlAugzo0+M=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@zonagamer-fullstack.iam.gserviceaccount.com",
+  "client_id": "101655618538453451472",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40zonagamer-fullstack.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
