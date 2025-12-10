@@ -90,24 +90,38 @@ public class CartService {
             );
         }
         
-        // 4. Obtener o crear carrito
-        Cart cart = cartRepository.findByUserId(userId)
-            .orElseGet(() -> {
-                Cart newCart = Cart.builder()
-                    .userId(userId)
-                    .items(new ArrayList<>())
-                    .fechaCreacion(new Date())
-                    .build();
-                
-                try {
-                    String cartId = cartRepository.save(newCart);
-                    newCart.setId(cartId);
-                } catch (ExecutionException | InterruptedException e) {
-                    throw new RuntimeException("Error al crear carrito", e);
-                }
-                
-                return newCart;
-            });
+        // 4. Obtener carrito existente O crear uno nuevo
+        Cart cart;
+        boolean isNewCart = false;
+        
+        var existingCart = cartRepository.findByUserId(userId);
+        
+        if (existingCart.isPresent()) {
+            cart = existingCart.get();
+            log.debug("Carrito existente encontrado con ID: {}", cart.getId());
+        } else {
+            // Crear nuevo carrito
+            log.info("Creando nuevo carrito para usuario: {}", userId);
+            
+            cart = Cart.builder()
+                .userId(userId)
+                .items(new ArrayList<>())
+                .fechaCreacion(new Date())
+                .build();
+            
+            // Guardar y obtener el ID generado
+            String cartId = cartRepository.save(cart);
+            cart.setId(cartId);
+            isNewCart = true;
+            
+            log.info("✅ Nuevo carrito creado con ID: {}", cartId);
+        }
+        
+        // Verificar que tenemos un ID válido
+        if (cart.getId() == null || cart.getId().isEmpty()) {
+            log.error("❌ CRÍTICO: Cart ID es null después de obtener/crear carrito");
+            throw new RuntimeException("Error al obtener/crear carrito: ID es null");
+        }
         
         // 5. Buscar si el producto ya está en el carrito
         CartItem existingItem = cart.getItems().stream()
@@ -131,7 +145,7 @@ public class CartService {
             log.debug("Item actualizado en carrito: nueva cantidad={}", newQuantity);
             
         } else {
-            // No existe: agregar nuevo item usando document ID
+            // No existe: agregar nuevo item
             CartItem newItem = CartItem.builder()
                 .productId(product.getId())
                 .productName(product.getNombreProducto())
@@ -148,6 +162,7 @@ public class CartService {
         cart.setFechaActualizacion(new Date());
         
         // 7. Guardar cambios
+        log.debug("Actualizando carrito con ID: {}", cart.getId());
         cartRepository.update(cart.getId(), cart);
         
         log.info("✅ Carrito actualizado: {} items", cart.getItems().size());

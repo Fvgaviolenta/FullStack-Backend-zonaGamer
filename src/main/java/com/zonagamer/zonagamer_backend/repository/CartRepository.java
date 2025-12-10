@@ -36,7 +36,14 @@ public class CartRepository extends BaseRepository<Cart> {
             return Optional.empty();
         }
 
-        Cart cart = querySnapshot.toObjects(Cart.class).get(0);
+        // ✅ CORRECCIÓN: Obtener el documento y asignar el ID
+        var document = querySnapshot.getDocuments().get(0);
+        Cart cart = document.toObject(Cart.class);
+        
+        if (cart != null) {
+            cart.setId(document.getId());  // ← CRÍTICO: Asignar document ID
+        }
+        
         return Optional.of(cart);
     }
 }
