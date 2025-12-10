@@ -66,14 +66,20 @@ public class SecurityConfig {
 
                         // ===== ENDPOINTS PÚBLICOS (sin autenticación) =====
 
-                        // Autenticación
+                        // OPTIONS requests (CORS preflight) - DEBE IR PRIMERO
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // Autenticación (registro, login, health)
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/register").permitAll()
+                        .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/health").permitAll()
 
                         // Productos (solo lectura)
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
 
                         // Categorías (solo lectura)
-                        .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()
 
                         // Health check
                         .requestMatchers("/api/health").permitAll()
@@ -99,9 +105,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasAuthority("ROLE_ADMIN")
 
                         // Gestión de categorías
-                        .requestMatchers(HttpMethod.POST, "/api/categories/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/categories/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/categories/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/categorias/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/categorias/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/categorias/**").hasAuthority("ROLE_ADMIN")
 
                         // Gestión de usuarios
                         .requestMatchers("/api/users", "/api/users/**").hasAuthority("ROLE_ADMIN")

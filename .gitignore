@@ -37,6 +37,10 @@ build/
 .env.local
 .env.*.local
 
+### Firebase Credentials ###
+**/fullstack-gamerzone-firebase.json
+src/main/resources/fullstack-gamerzone-firebase.json
+
 ### Node modules (si usaste Firebase CLI) ###
 node_modules/
 package-lock.json

@@ -63,11 +63,30 @@ public class OrderService {
                 .build())
             .collect(Collectors.toList());
 
+        // ✅ Reducir stock ANTES de crear la orden (validación ya hecha arriba)
+        log.info("Reduciendo stock de productos...");
+        try {
+            for (OrderItem item : orderItems) {
+                productService.reduceStock(item.getProductId(), item.getQuantity());
+                log.debug("Stock reducido para: {} (-{})", 
+                    item.getProductName(), item.getQuantity());
+            }
+            log.info("✅ Stock reducido exitosamente para {} productos", orderItems.size());
+        } catch (InsufficientStockException e) {
+            log.error("❌ Stock insuficiente durante checkout: {}", e.getMessage());
+            throw new IllegalStateException(
+                "No hay suficiente stock disponible: " + e.getMessage()
+            );
+        } catch (Exception e) {
+            log.error("❌ Error al reducir stock: {}", e.getMessage());
+            throw new RuntimeException("Error al procesar el stock de la orden", e);
+        }
+
         Order order = Order.builder()
             .userId(userId)
             .items(orderItems)
             .total(cart.getTotal())
-            .status(Order.OrderStatus.PENDING)  // Orden pendiente de aprobación
+            .status(Order.OrderStatus.PAID)  // ✅ Orden automáticamente PAGADA
             .deliveryAddress(checkoutDTO.getDeliveryAddress())
             .notes(checkoutDTO.getNotes())
             .build();
@@ -75,17 +94,14 @@ public class OrderService {
         String orderId = orderRepository.save(order);
         order.setId(orderId);
         
-        log.info("✅ Orden creada con estado PENDING: {}", orderId);
+        log.info("✅ Orden creada con estado PAID: {}", orderId);
         
-        // NO reducimos stock hasta que la orden sea aprobada por un administrador
-        // El stock se reducirá cuando el admin cambie el estado a PAID o PROCESSING
-        
-        // 8. Vaciar el carrito
+        // Vaciar el carrito
         cartService.clearCart(userId);
         
         log.info("✅ Checkout completado exitosamente. Orden: {}", orderId);
         
-        // 9. Retornar orden como DTO
+        // Retornar orden como DTO
         return mapToResponseDTO(order);
     }
     
@@ -152,11 +168,13 @@ public class OrderService {
         Order.OrderStatus oldStatus = order.getStatus();
         order.setStatus(newStatus);
         
-        // Si la orden pasa de PENDING a PAID o PROCESSING, reducir stock
+        // ✅ NOTA: El stock ya se reduce automáticamente al crear la orden (checkout)
+        // Las órdenes se crean con estado PAID, por lo que NO es necesario reducir stock aquí
+        // Este bloque solo aplica si hay órdenes antiguas que aún estén en PENDING
         if (oldStatus == Order.OrderStatus.PENDING && 
             (newStatus == Order.OrderStatus.PAID || newStatus == Order.OrderStatus.PROCESSING)) {
             
-            log.info("Orden aprobada. Reduciendo stock...");
+            log.info("Orden antigua en PENDING siendo aprobada. Reduciendo stock...");
             
             try {
                 for (OrderItem item : order.getItems()) {
